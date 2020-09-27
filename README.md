@@ -6,10 +6,10 @@ Creates a Container which runs the v1/docker Branch of [D-Zone-Org's](https://gi
 ## Note:
 D-Zone will, by default, listen to all channels on the servers which your bot is connected to. If you want to set ignoreChannels, you need to edit a file in your D-Zone container:
 
-docker exec into the container: `docker exec -it d-zone /bin/sh`
-Install NANO as our text editor: ´apk add nano´
-Open discord-config.json in NANO: `nano discord-config.json`
-Edit the "servers" block on a per server basis, e.g.:
+- docker exec into the container: `docker exec -it d-zone /bin/sh`
+- Install NANO as our text editor: ´apk add nano´
+- Open discord-config.json in NANO: `nano discord-config.json`
+- Edit the "servers" block on a per server basis, e.g.:
 ```
   "servers": [
     {
