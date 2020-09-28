@@ -1,5 +1,5 @@
 # docker-D-Zone
-https://github.com/d-zone-org/d-zone/tree/v1/docker in a container!
+https://github.com/d-zone-org/d-zone/tree/heroku in a container!
 
 Creates a Container which runs the v1/docker Branch of [D-Zone-Org's](https://github.com/d-zone-org) [D-Zone](https://github.com/d-zone-org/d-zone), with [node:8-alpine](https://hub.docker.com/_/node) as the base image, as seen on https://pixelatomy.com/dzone/?s=default. 
 
