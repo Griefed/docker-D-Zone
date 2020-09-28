@@ -36,7 +36,6 @@ docker-compose up -d --build d-zone
 D-Zone will, by default, listen to all channels on the servers which your bot is connected to. If you want to set ignoreChannels, you need to edit a file in your D-Zone container:
 
 - docker exec into the container: `docker exec -it d-zone /bin/sh`
-- Install NANO as our text editor: ´apk add nano´
 - Open discord-config.json in NANO: `nano discord-config.json`
 - Edit the "servers" block on a per server basis, e.g.:
 ```
@@ -53,6 +52,32 @@ This tutorial assumes that your bot is only a member of one server. If you want 
 
 ### Note 2
 
-As far as I know there is currently no way to use a reverse proxy like nginx to serve this container with HTTPS. I've tried a lot of things mentioned [here](https://github.com/d-zone-org/d-zone/issues/5#issuecomment-699672593) and none of them worked. If you find a way to serve this container with nginx and HTTPS, please open an issue explain how you did it, because I sure as hell didn't get it to work.
+I use a dockerized nginx as a reverse proxy, specifically https://hub.docker.com/r/linuxserver/swag.
+If you want to serve d-zone with a reverse proxy like nginx, then this may be of help to you:
+```
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    server_name YOUR_SUBDOMAIN_HERE.*;
+
+    include /config/nginx/ssl.conf;
+
+    client_max_body_size 0;
+
+    location / {
+        include /config/nginx/proxy.conf;
+        resolver 127.0.0.11 valid=30s;
+        proxy_set_header HOST $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_pass_request_headers on;
+        proxy_pass http://d-zone-phoenixorden:3000;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+    }
+}
+```
 
 ![d-zone](https://i.imgur.com/ENSa5l0.png)
