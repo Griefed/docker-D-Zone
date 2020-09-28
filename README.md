@@ -16,7 +16,29 @@ Creates a Container which runs the heroku branch of [D-Zone-Org's](https://githu
 ```
 ### Deploy on Rasbperry Pi
 Using the Dockerfile, this container can be built and run on a Raspberry Pi, too! I've tested it on a Raspberry Pi 3B+.
-Simply put the Dockerfile in a directory called `d-zone` in the same directory as your docker-compose.yml, edit your docker-compose.yml:
+Simply put the Dockerfile in a directory called `d-zone` 
+```
+FROM node:8-alpine
+
+LABEL   maintainer="Griefed <griefed@griefed.de>"
+LABEL   description="Based on https://github.com/d-zone-org/d-zone/tree/v1/docker \
+but pulls files from GitHub instead of copying from local filesystem. \
+You must set your bot token as an environment variable and your bot must be \
+a member of at least one server for this to work."
+
+
+RUN     apk update && apk upgrade && apk add git && apk add nano                        && \
+        git clone -b v1/docker https://github.com/d-zone-org/d-zone.git /opt/d-zone     && \
+        cd /opt/d-zone                                                                  && \
+        npm install                                                                     && \
+        npm run-script build                                                            && \
+        apk del git
+
+WORKDIR /opt/d-zone
+
+CMD ["npm","start"]
+```
+in the same directory as your docker-compose.yml, edit your docker-compose.yml:
 ```
   d-zone:
     container_name: d-zone
