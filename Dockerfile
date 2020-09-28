@@ -16,6 +16,4 @@ RUN     apk update && apk upgrade && apk add git && apk add nano                
 
 WORKDIR /opt/d-zone
 
-RUN     node ./script/update-config.js
-
 CMD ["npm","start"]
