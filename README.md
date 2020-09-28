@@ -73,7 +73,7 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_pass_request_headers on;
-        proxy_pass http://d-zone-phoenixorden:3000;
+        proxy_pass http://D_ZONE_SERVICE_NAME:3000;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
     }
