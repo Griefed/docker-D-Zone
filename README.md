@@ -94,4 +94,4 @@ server {
 }
 ```
 
-![d-zone](https://i.imgur.com/ENSa5l0.png)
+![d-zone](https://i.imgur.com/uCd6eRa.png)
