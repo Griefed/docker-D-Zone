@@ -50,10 +50,24 @@ D-Zone will, by default, listen to all channels on the servers which your bot is
 `CTRL+X` followed by `Y` followed by `ENTER` to safe and quit NANO. Enter `exit` to leave the container and restart the container with `docker restart d-zone`. 
 This tutorial assumes that your bot is only a member of one server. If you want to define multiple server, see https://github.com/d-zone-org/d-zone/blob/master/discord-config-example.json
 
+You may also need to exec into the container in order to edit your socket-config.json and change the port D-Zone runs on. The `heroku` branch seems to default to port 0, which, of couse, doesn't work. For the example below to function, you need to change the port to `3000´. 
+
 ### Note 2
 
 I use a dockerized nginx as a reverse proxy, specifically https://hub.docker.com/r/linuxserver/swag.
-If you want to serve d-zone with a reverse proxy like nginx, then this may be of help to you:
+If you want to serve d-zone with a reverse proxy like nginx and HTTPS, then this may be of help to you:
+```
+  d-zone:
+    container_name: d-zone
+    image: griefed/d-zone
+    restart: unless-stopped
+    volumes:
+      - ./PATH/TO/YOUR/SSL/KEY_AND_CHAIN/FOLDER:/keys
+    environment:
+      - TOKEN=<YOUR_BOT_TOKEN_HERE>
+      - CERT=/keys/fullchain.pem
+      - KEY=/keys/privkey.pem
+```
 ```
 server {
     listen 443 ssl;
@@ -73,7 +87,7 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_pass_request_headers on;
-        proxy_pass http://D_ZONE_SERVICE_NAME:3000;
+        proxy_pass http://d-zone:3000;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
     }
