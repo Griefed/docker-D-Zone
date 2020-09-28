@@ -61,12 +61,8 @@ If you want to serve d-zone with a reverse proxy like nginx and HTTPS, then this
     container_name: d-zone
     image: griefed/d-zone
     restart: unless-stopped
-    volumes:
-      - ./PATH/TO/YOUR/SSL/KEY_AND_CHAIN/FOLDER:/keys
     environment:
       - TOKEN=<YOUR_BOT_TOKEN_HERE>
-      - CERT=/keys/fullchain.pem
-      - KEY=/keys/privkey.pem
 ```
 ```
 server {
