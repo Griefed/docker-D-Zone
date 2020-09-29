@@ -72,7 +72,7 @@ D-Zone will, by default, listen to all channels on the servers which your bot is
 `CTRL+X` followed by `Y` followed by `ENTER` to safe and quit NANO. Enter `exit` to leave the container and restart the container with `docker restart d-zone`. 
 This tutorial assumes that your bot is only a member of one server. If you want to define multiple server, see https://github.com/d-zone-org/d-zone/blob/master/discord-config-example.json
 
-You may also need to exec into the container in order to edit your socket-config.json and change the port D-Zone runs on. The `heroku` branch seems to default to port 0, which, of couse, doesn't work. For the example below to function, you need to change the port to `3000´. 
+You may also need to exec into the container in order to edit your socket-config.json and change the port D-Zone runs on. The `heroku` branch seems to default to port 0, which, of couse, doesn't work. For the example below to function, you need to change the port to `3000`. 
 
 ### Note 2
 
