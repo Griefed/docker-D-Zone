@@ -1,6 +1,13 @@
 # docker-D-Zone
 https://github.com/d-zone-org/d-zone/tree/heroku in a container!
 
+![Docker Pulls](https://img.shields.io/docker/pulls/griefed/d-zone?style=flat-square)
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/griefed/d-zone?label=Image%20size&sort=date&style=flat-square)
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/griefed/d-zone?label=Docker%20build&style=flat-square)
+![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/griefed/d-zone?label=Docker%20build&style=flat-square)
+![GitHub Repo stars](https://img.shields.io/github/stars/Griefed/docker-D-Zone?label=GitHub%20Stars&style=social)
+![GitHub forks](https://img.shields.io/github/forks/Griefed/docker-D-Zone?label=GitHub%20Forks&style=social)
+
 Creates a Container which runs the heroku branch of [D-Zone-Org's](https://github.com/d-zone-org) [D-Zone](https://github.com/d-zone-org/d-zone), with [node:8-alpine](https://hub.docker.com/_/node) as the base image, as seen on https://pixelatomy.com/dzone/?s=default. 
 
 # Deploy with docker-compose:
