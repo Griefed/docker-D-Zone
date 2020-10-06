@@ -113,8 +113,13 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_pass_request_headers on;
         proxy_pass http://d-zone:3000;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "Upgrade";
+        ###
+        # Configs below no longer needed as of 01.09.20 SWAG-1.8.0-ls10
+        # Only enable if you use an older version of SWAG or if you for some reason still need these
+        ###
+        #proxy_http_version 1.0;
+        #proxy_set_header Upgrade $http_upgrade;
+        #proxy_set_header Connection "Upgrade";
     }
 }
 ```
