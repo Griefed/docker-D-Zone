@@ -15,5 +15,5 @@ RUN     apk update && apk upgrade && apk add git && apk add nano                
         apk del git
 
 WORKDIR /opt/d-zone
-
+EXPOSE 3000
 CMD ["npm","start"]
