@@ -15,6 +15,8 @@ Using this image allows us to use the same user/group ids in the container as on
 
 ---
 
+# Work In Progress!
+
 D-Zone is a graphical simulation meant to abstractly represent the activity in your Discord server.
 
 This is not meant for any actual monitoring or diagnostics, only an experiment in the abstraction of chatroom data represented via autonomous characters in a scene.
