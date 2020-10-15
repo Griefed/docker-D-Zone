@@ -1,5 +1,5 @@
 # [D-Zone](https://github.com/d-zone-org/d-zone)
-https://github.com/d-zone-org/d-zone/tree/heroku in a container!
+https://github.com/d-zone-org/d-zone in a container!
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/griefed/d-zone?style=flat-square)](https://hub.docker.com/repository/docker/griefed/d-zone)
 [![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/griefed/d-zone?label=Image%20size&sort=date&style=flat-square)](https://hub.docker.com/repository/docker/griefed/d-zone)
