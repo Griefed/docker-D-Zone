@@ -16,12 +16,14 @@ Using this image allows us to use the same user/group ids in the container as on
 ---
 
 # Work In Progress!
-
 D-Zone is a graphical simulation meant to abstractly represent the activity in your Discord server.
 
 This is not meant for any actual monitoring or diagnostics, only an experiment in the abstraction of chatroom data represented via autonomous characters in a scene.
 
-# Usage
+## Deployment
+
+### x86_64
+
 ```docker-compose.yml
   d-zone:
     container_name: d-zone
@@ -38,10 +40,43 @@ This is not meant for any actual monitoring or diagnostics, only an experiment i
       - 3000:3000
 ```
 
+### Raspberry Pi & building the image yourself
+
+Using the [noproxy Dockerfile](https://github.com/Griefed/docker-D-Zone/blob/lsiobase/alpine/Dockerfile.noproxy), this container can be built and run on a Raspberry Pi. 
+I've tested it on a Raspberry Pi 3B & 3B+.
+
+#### docker-compose.yml
+
+```docker-compose.yml
+  d-zone:
+    container_name: d-zone
+    build: ./d-zone/
+    restart: unless-stopped
+    volumes:
+      - ./path/to/config/files:/config
+    environment:
+      - TOKEN=<YOUR_BOT_TOKEN_HERE>
+      - TZ=Europe/Berlin
+      - PUID=1000  #User ID
+      - PGID=1000  #Group ID
+    ports:
+      - 3000:3000
+```
+
+1. Clone the repository: `git clone https://github.com/Griefed/docker-D-Zone.git ./d-zone`
+1. Replace **Dockerfile** with **Dockerfile.noproxy**: `rm Dockerfile && mv Dockerfile.noproxy Dockerfile`
+1. Prepare docker-compose.yml file as seen below
+1. docker-compose up -d --build d-zone
+1. Visit IP.ADDRESS.OF.HOST:3000
+1. ???
+1. Profit!
+
+## Configuration
+
 Configuration | Explanation
 ------------ | -------------
-restart: | [Restart policy](https://docs.docker.com/compose/compose-file/#restart) Either: "no", always, on-failure, unless-stopped
-/config volume | Local path to config files
+restart | [Restart policy](https://docs.docker.com/compose/compose-file/#restart) Either: "no", always, on-failure, unless-stopped
+volumes | /config contains all relevant configuration files.
 TZ | Timezone
 PUID | for UserID
 PGID | for GroupID
@@ -58,35 +93,6 @@ In this instance `PUID=1000` and `PGID=1000`, to find yours use `id user` as bel
 ```
   $ id username
     uid=1000(dockeruser) gid=1000(dockergroup) groups=1000(dockergroup)
-```
-
-### Deploy on Rasbperry Pi
-Using the [noproxy Dockerfile](https://github.com/Griefed/docker-D-Zone/blob/lsiobase/alpine/Dockerfile.noproxy), this container can be built and run on a Raspberry Pi, too! I've tested it on a Raspberry Pi 3B+.
-
-1. Clone the repository: `git clone https://github.com/Griefed/docker-D-Zone.git ./d-zone`
-1. Replace Dockerfile with Dockerfile.noproxy: `rm Dockerfile && mv Dockerfile.noproxy Dockerfile`
-1. Prepare docker-compose.yml file as seen below
-1. docker-compose up -d --build d-zone
-1. Visit IP.ADDRESS.OF.HOST:3000
-1. ???
-1. Profit!
-
-
-#### docker-compose.yml
-```docker-compose.yml
-  d-zone:
-    container_name: d-zone
-    build: ./d-zone/
-    restart: unless-stopped
-    volumes:
-      - ./path/to/config/files:/config
-    environment:
-      - TOKEN=<YOUR_BOT_TOKEN_HERE>
-      - TZ=Europe/Berlin
-      - PUID=1000  #User ID
-      - PGID=1000  #Group ID
-    ports:
-      - 3000:3000
 ```
 
 ## Specify channels to ignore:
@@ -126,28 +132,42 @@ server {
     listen 443 ssl;
     listen [::]:443 ssl;
 
-    server_name YOUR_SUBDOMAIN_HERE.*;
+    server_name SUBDMOAIN.*;
 
     include /config/nginx/ssl.conf;
 
     client_max_body_size 0;
 
+    # enable for ldap auth, fill in ldap details in ldap.conf
+    #include /config/nginx/ldap.conf;
+
+    # enable for Authelia
+    #include /config/nginx/authelia-server.conf;
+
     location / {
+        # enable the next two lines for http auth
+        #auth_basic "Restricted";
+        #auth_basic_user_file /config/nginx/.htpasswd;
+
+        # enable the next two lines for ldap auth
+        #auth_request /auth;
+        #error_page 401 =200 /ldaplogin;
+
+        # enable for Authelia
+        #include /config/nginx/authelia-location.conf;
+
         include /config/nginx/proxy.conf;
         resolver 127.0.0.11 valid=30s;
+
         proxy_set_header HOST $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_pass_request_headers on;
-        proxy_pass http://d-zone:3000;
-        ###
-        # Configs below no longer needed as of 01.09.20 SWAG-1.8.0-ls10
-        # Only enable if you use an older version of SWAG or if you for some reason still need these
-        ###
-        #proxy_http_version 1.0;
-        #proxy_set_header Upgrade $http_upgrade;
-        #proxy_set_header Connection "Upgrade";
+        set $upstream_app d-zone;
+        set $upstream_port 3000;
+        set $upstream_proto http;
+        proxy_pass $upstream_proto://$upstream_app:$upstream_port;
     }
 }
 ```
