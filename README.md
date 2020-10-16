@@ -1,5 +1,4 @@
-# [D-Zone](https://github.com/d-zone-org/d-zone)
-https://github.com/d-zone-org/d-zone in a container!
+[![D-Zone](https://i.griefed.de/images/2020/10/16/d-zone.png)](https://github.com/d-zone-org/d-zone)
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/griefed/d-zone?style=flat-square)](https://hub.docker.com/repository/docker/griefed/d-zone)
 [![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/griefed/d-zone?label=Image%20size&sort=date&style=flat-square)](https://hub.docker.com/repository/docker/griefed/d-zone)
@@ -8,17 +7,16 @@ https://github.com/d-zone-org/d-zone in a container!
 [![GitHub Repo stars](https://img.shields.io/github/stars/Griefed/docker-D-Zone?label=GitHub%20Stars&style=social)](https://github.com/Griefed/docker-D-Zone)
 [![GitHub forks](https://img.shields.io/github/forks/Griefed/docker-D-Zone?label=GitHub%20Forks&style=social)](https://github.com/Griefed/docker-D-Zone)
 
-Creates a Container which runs the heroku branch of [D-Zone-Org's](https://github.com/d-zone-org) [D-Zone](https://github.com/d-zone-org/d-zone), with [lsiobase/alpine](https://hub.docker.com/r/lsiobase/alpine) as the base image, as seen on https://pixelatomy.com/dzone/?s=default. 
-
-The lasiobase/alpine image is a custom base image built with [Alpine linux](https://alpinelinux.org/) and [S6 overlay](https://github.com/just-containers/s6-overlay).
-Using this image allows us to use the same user/group ids in the container as on the host, making file transfers much easier
-
----
-
-# Work In Progress!
 D-Zone is a graphical simulation meant to abstractly represent the activity in your Discord server.
 
 This is not meant for any actual monitoring or diagnostics, only an experiment in the abstraction of chatroom data represented via autonomous characters in a scene.
+
+---
+
+Creates a Container which runs [D-Zone-Org's](https://github.com/d-zone-org) [D-Zone](https://github.com/d-zone-org/d-zone), with [lsiobase/alpine](https://hub.docker.com/r/lsiobase/alpine) as the base image, as seen on https://pixelatomy.com/dzone/?s=default. 
+
+The lasiobase/alpine image is a custom base image built with [Alpine linux](https://alpinelinux.org/) and [S6 overlay](https://github.com/just-containers/s6-overlay).
+Using this image allows us to use the same user/group ids in the container as on the host, making file transfers much easier
 
 ## Deployment
 
@@ -45,39 +43,6 @@ services:
     ports:         # Only specify a port mapping when
       - 3000:3000  # using the port tag
 ```
-
-### Raspberry Pi & building the image yourself
-
-Using the [Dockerfile.port](https://github.com/Griefed/docker-D-Zone/blob/lsiobase/alpine/Dockerfile.port), this container can be built and run on a Raspberry Pi. 
-I've tested it on a Raspberry Pi 3B & 3B+.
-
-#### docker-compose.yml
-
-```docker-compose.yml
-version: '3.6'
-services:
-  d-zone:
-    container_name: d-zone
-    build: ./d-zone/
-    restart: unless-stopped
-    volumes:
-      - ./path/to/config/files:/config
-    environment:
-      - TOKEN=<YOUR_BOT_TOKEN_HERE>
-      - TZ=Europe/Berlin
-      - PUID=1000  #User ID
-      - PGID=1000  #Group ID
-    ports:
-      - 3000:3000
-```
-
-1. Clone the repository: `git clone https://github.com/Griefed/docker-D-Zone.git ./d-zone`
-1. Rename **Dockerfile.port** to **Dockerfile**: `mv Dockerfile.port Dockerfile`
-1. Prepare docker-compose.yml file as seen above
-1. `docker-compose up -d --build d-zone`
-1. Visit IP.ADDRESS.OF.HOST:3000
-1. ???
-1. Profit!
 
 ## Configuration
 
@@ -184,5 +149,38 @@ server {
     }
 }
 ```
+
+### Raspberry Pi & building the image yourself
+
+Using the [Dockerfile.port](https://github.com/Griefed/docker-D-Zone/blob/lsiobase/alpine/Dockerfile.port), this container can be built and run on a Raspberry Pi. 
+I've tested it on a Raspberry Pi 3B & 3B+.
+
+#### docker-compose.yml
+
+```docker-compose.yml
+version: '3.6'
+services:
+  d-zone:
+    container_name: d-zone
+    build: ./d-zone/
+    restart: unless-stopped
+    volumes:
+      - ./path/to/config/files:/config
+    environment:
+      - TOKEN=<YOUR_BOT_TOKEN_HERE>
+      - TZ=Europe/Berlin
+      - PUID=1000  #User ID
+      - PGID=1000  #Group ID
+    ports:
+      - 3000:3000
+```
+
+1. Clone the repository: `git clone https://github.com/Griefed/docker-D-Zone.git ./d-zone`
+1. Rename **Dockerfile.port** to **Dockerfile**: `mv Dockerfile.port Dockerfile`
+1. Prepare docker-compose.yml file as seen above
+1. `docker-compose up -d --build d-zone`
+1. Visit IP.ADDRESS.OF.HOST:3000
+1. ???
+1. Profit!
 
 ![d-zone](https://i.imgur.com/uCd6eRa.png)
