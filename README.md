@@ -43,7 +43,7 @@ port | Use this image if you want to access d-zone via `IP:PORT`
       - PGID=1000  # Group ID
     ports:         # Only specify a port mapping when
       - 3000:3000  # using the port tag
-      ```
+```
 
 ### Raspberry Pi & building the image yourself
 
