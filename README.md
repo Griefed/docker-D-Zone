@@ -24,12 +24,13 @@ This is not meant for any actual monitoring or diagnostics, only an experiment i
 
 ### Pre-built images
 
-Tag | Explanation
-----|------------
-proxy | Use this image if you are using a reverse proxy
-port | Use this image if you want to access d-zone via `IP:PORT`
+- Using the [`proxy`](https://github.com/Griefed/docker-D-Zone/blob/lsiobase/alpine/Dockerfile.proxy) tag:  Use this image if you are using a reverse proxy. Connecting via IP:PORT will not work with this image.
+
+- Using the [`port`](https://github.com/Griefed/docker-D-Zone/blob/lsiobase/alpine/Dockerfile.port) tag:  Use this image if you want to access d-zone via IP:PORT. Connecting with a reverse proxy will not work with this image.
 
 ```docker-compose.yml
+version: '3.6'
+services:
   d-zone:
     container_name: d-zone
     image: griefed/d-zone:<tag> # Either proxy or port
@@ -53,6 +54,8 @@ I've tested it on a Raspberry Pi 3B & 3B+.
 #### docker-compose.yml
 
 ```docker-compose.yml
+version: '3.6'
+services:
   d-zone:
     container_name: d-zone
     build: ./d-zone/
@@ -85,7 +88,7 @@ volumes | /config contains all relevant configuration files.
 TZ | Timezone
 PUID | for UserID
 PGID | for GroupID
-ports | The port where D-Zone will be available at. Only relevant when using `port`-tag
+ports | The port where D-Zone will be available at. Only relevant when using `griefed/d-zone:port`
 
 ## User / Group Identifiers
 
@@ -120,6 +123,8 @@ If you want to define multiple servers, see https://github.com/d-zone-org/d-zone
 If you want to serve d-zone with a reverse proxy like nginx and HTTPS, then this may be of help to you:
 
 ```docker-compose.yml
+version: '3.6'
+services:
   d-zone:
     container_name: d-zone
     image: griefed/d-zone:proxy
