@@ -69,7 +69,7 @@ I've tested it on a Raspberry Pi 3B & 3B+.
 ```
 
 1. Clone the repository: `git clone https://github.com/Griefed/docker-D-Zone.git ./d-zone`
-1. Rename **Dockerfile.port to **Dockerfile**: `mv Dockerfile.port Dockerfile`
+1. Rename **Dockerfile.port** to **Dockerfile**: `mv Dockerfile.port Dockerfile`
 1. Prepare docker-compose.yml file as seen below
 1. docker-compose up -d --build d-zone
 1. Visit IP.ADDRESS.OF.HOST:3000
