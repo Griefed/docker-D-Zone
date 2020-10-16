@@ -32,7 +32,7 @@ port | Use this image if you want to access d-zone via `IP:PORT`
 ```docker-compose.yml
   d-zone:
     container_name: d-zone
-    image: griefed/d-zone
+    image: griefed/d-zone:<tag> # Either proxy or port
     restart: unless-stopped
     volumes:
       - ./path/to/config/files:/config
@@ -47,7 +47,7 @@ port | Use this image if you want to access d-zone via `IP:PORT`
 
 ### Raspberry Pi & building the image yourself
 
-Using the [noproxy Dockerfile](https://github.com/Griefed/docker-D-Zone/blob/lsiobase/alpine/Dockerfile.noproxy), this container can be built and run on a Raspberry Pi. 
+Using the [Dockerfile.port](https://github.com/Griefed/docker-D-Zone/blob/lsiobase/alpine/Dockerfile.port), this container can be built and run on a Raspberry Pi. 
 I've tested it on a Raspberry Pi 3B & 3B+.
 
 #### docker-compose.yml
@@ -69,7 +69,7 @@ I've tested it on a Raspberry Pi 3B & 3B+.
 ```
 
 1. Clone the repository: `git clone https://github.com/Griefed/docker-D-Zone.git ./d-zone`
-1. Replace **Dockerfile** with **Dockerfile.noproxy**: `rm Dockerfile && mv Dockerfile.noproxy Dockerfile`
+1. Rename **Dockerfile.port to **Dockerfile**: `mv Dockerfile.port Dockerfile`
 1. Prepare docker-compose.yml file as seen below
 1. docker-compose up -d --build d-zone
 1. Visit IP.ADDRESS.OF.HOST:3000
@@ -85,7 +85,7 @@ volumes | /config contains all relevant configuration files.
 TZ | Timezone
 PUID | for UserID
 PGID | for GroupID
-ports | The port where D-Zone will be available at. Change left number.
+ports | The port where D-Zone will be available at. Only relevant when using `port`-tag
 
 ## User / Group Identifiers
 
@@ -117,12 +117,12 @@ If you want to define multiple servers, see https://github.com/d-zone-org/d-zone
 
 ## Running D-Zone behind a reverse proxy like NGINX
 
-I use a dockerized nginx as a reverse proxy, specifically https://hub.docker.com/r/linuxserver/swag.
 If you want to serve d-zone with a reverse proxy like nginx and HTTPS, then this may be of help to you:
+
 ```docker-compose.yml
   d-zone:
     container_name: d-zone
-    image: griefed/d-zone
+    image: griefed/d-zone:proxy
     restart: unless-stopped
     volumes:
       - ./path/to/config/files:/config
@@ -132,6 +132,9 @@ If you want to serve d-zone with a reverse proxy like nginx and HTTPS, then this
       - PUID=1000  #User ID
       - PGID=1000  #Group ID
 ```
+
+I use a dockerized NGINX as a reverse proxy, specifically [linuxserver/swag](https://hub.docker.com/r/linuxserver/swag).
+
 ```nginx
 server {
     listen 443 ssl;
