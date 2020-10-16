@@ -26,6 +26,8 @@ Using this image allows us to use the same user/group ids in the container as on
 
 - Using the [`port`](https://github.com/Griefed/docker-D-Zone/blob/lsiobase/alpine/Dockerfile.port) tag:  Use this image if you want to access d-zone via IP:PORT. Connecting with a reverse proxy will not work with this image.
 
+- Pulling `:latest` will automatically retrieve the [`proxy`](https://github.com/Griefed/docker-D-Zone/blob/lsiobase/alpine/Dockerfile.proxy) image.
+
 ```docker-compose.yml
 version: '3.6'
 services:
