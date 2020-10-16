@@ -22,7 +22,12 @@ This is not meant for any actual monitoring or diagnostics, only an experiment i
 
 ## Deployment
 
-### x86_64
+### Pre-built images
+
+Tag | Explanation
+----|------------
+proxy | Use this image if you are using a reverse proxy
+port | Use this image if you want to access d-zone via `IP:PORT`
 
 ```docker-compose.yml
   d-zone:
@@ -34,11 +39,11 @@ This is not meant for any actual monitoring or diagnostics, only an experiment i
     environment:
       - TOKEN=<YOUR_BOT_TOKEN_HERE>
       - TZ=Europe/Berlin
-      - PUID=1000  #User ID
-      - PGID=1000  #Group ID
-    ports:
-      - 3000:3000
-```
+      - PUID=1000  # User ID
+      - PGID=1000  # Group ID
+    ports:         # Only specify a port mapping when
+      - 3000:3000  # using the port tag
+      ```
 
 ### Raspberry Pi & building the image yourself
 
