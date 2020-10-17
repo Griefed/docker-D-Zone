@@ -29,5 +29,7 @@ RUN \
 # Copy local files
 COPY root/ /
 
-# Communicate port to be used
+# Communicate ports and volumes to be used
 EXPOSE 3000
+
+VOLUME /config
