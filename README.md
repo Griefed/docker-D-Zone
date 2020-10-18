@@ -11,6 +11,8 @@ D-Zone is a graphical simulation meant to abstractly represent the activity in y
 
 This is not meant for any actual monitoring or diagnostics, only an experiment in the abstraction of chatroom data represented via autonomous characters in a scene.
 
+![d-zone](https://i.imgur.com/uCd6eRa.png)
+
 ---
 
 Creates a Container which runs [D-Zone-Org's](https://github.com/d-zone-org) [D-Zone](https://github.com/d-zone-org/d-zone), with [lsiobase/alpine](https://hub.docker.com/r/lsiobase/alpine) as the base image, as seen on https://pixelatomy.com/dzone/?s=default. 
@@ -184,5 +186,3 @@ services:
 1. Visit IP.ADDRESS.OF.HOST:3000
 1. ???
 1. Profit!
-
-![d-zone](https://i.imgur.com/uCd6eRa.png)
