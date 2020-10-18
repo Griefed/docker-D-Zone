@@ -1,4 +1,4 @@
-[![D-Zone](https://i.griefed.de/images/2020/10/16/d-zone.png)](https://github.com/d-zone-org/d-zone)
+[![D-Zone](https://i.griefed.de/images/2020/10/18/d-zone.png)](https://github.com/d-zone-org/d-zone)
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/griefed/d-zone?style=flat-square)](https://hub.docker.com/repository/docker/griefed/d-zone)
 [![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/griefed/d-zone?label=Image%20size&sort=date&style=flat-square)](https://hub.docker.com/repository/docker/griefed/d-zone)
