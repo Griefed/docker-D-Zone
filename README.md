@@ -1,4 +1,4 @@
-[![D-Zone](https://i.griefed.de/images/2020/10/18/d-zone.png)](https://github.com/d-zone-org/d-zone)
+[![D-Zone](img/docker-D-Zone_header.png)](https://github.com/d-zone-org/d-zone)
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/griefed/d-zone?style=flat-square)](https://hub.docker.com/repository/docker/griefed/d-zone)
 [![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/griefed/d-zone?label=Image%20size&sort=date&style=flat-square)](https://hub.docker.com/repository/docker/griefed/d-zone)
@@ -11,7 +11,7 @@ D-Zone is a graphical simulation meant to abstractly represent the activity in y
 
 This is not meant for any actual monitoring or diagnostics, only an experiment in the abstraction of chatroom data represented via autonomous characters in a scene.
 
-![d-zone](https://i.imgur.com/uCd6eRa.png)
+[![d-zone](img/docker-D-Zone_screenshot.png)](https://github.com/d-zone-org/d-zone)
 
 ---
 
