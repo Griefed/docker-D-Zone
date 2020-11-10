@@ -46,7 +46,7 @@ test_port:
     - shell
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build  --tag $CI_REGISTRY_IMAGE:arm-port -f Dockerfile.port .
+    - docker build  --network host --tag $CI_REGISTRY_IMAGE:arm-port -f Dockerfile.port .
     - docker push $CI_REGISTRY_IMAGE:arm-port
 
 test_proxy:
@@ -55,7 +55,7 @@ test_proxy:
     - shell
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build  --tag $CI_REGISTRY_IMAGE:arm-proxy -f Dockerfile.proxy .
+    - docker build  --network host --tag $CI_REGISTRY_IMAGE:arm-proxy -f Dockerfile.proxy .
     - docker push $CI_REGISTRY_IMAGE:arm-proxy
 
 publish_port:
@@ -64,17 +64,17 @@ publish_port:
     - shell
   script:
     - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $DOCKER_REGISTRY
-    - docker build --tag $DOCKER_USER/$DOCKER_REPO:arm-port -f Dockerfile.port .
+    - docker build --network host --tag $DOCKER_USER/$DOCKER_REPO:arm-port -f Dockerfile.port .
     - docker push $DOCKER_USER/$DOCKER_REPO:arm-port
     - docker system prune --all --force
 
-publish_port:
+publish_proxy:
   stage: publish
   tags:
     - shell
   script:
     - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $DOCKER_REGISTRY
-    - docker build --tag $DOCKER_USER/$DOCKER_REPO:arm-proxy -f Dockerfile.proxy .
+    - docker build --network host --tag $DOCKER_USER/$DOCKER_REPO:arm-proxy -f Dockerfile.proxy .
     - docker push $DOCKER_USER/$DOCKER_REPO:arm-proxy
     - docker system prune --all --force
 
