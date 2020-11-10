@@ -46,7 +46,7 @@ test_port:
     - shell
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build  --network host --tag $CI_REGISTRY_IMAGE:arm-port -f Dockerfile.port .
+    - docker build --network host --tag $CI_REGISTRY_IMAGE:arm-port -f Dockerfile.port .
     - docker push $CI_REGISTRY_IMAGE:arm-port
 
 test_proxy:
@@ -55,7 +55,7 @@ test_proxy:
     - shell
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build  --network host --tag $CI_REGISTRY_IMAGE:arm-proxy -f Dockerfile.proxy .
+    - docker build --network host --tag $CI_REGISTRY_IMAGE:arm-proxy -f Dockerfile.proxy .
     - docker push $CI_REGISTRY_IMAGE:arm-proxy
 
 publish_port:

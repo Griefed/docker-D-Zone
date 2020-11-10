@@ -24,31 +24,37 @@ Using this image allows us to use the same user/group ids in the container as on
 
 ## Deployment
 
-### Pre-built images
+Tags | Description
+-----|-------------
+$DOCKERHUB_TAG_ONE | Use tag `$DOCKERHUB_TAG_ONE` if accessing $CREATOR_REPONAME via IP:PORT
+$DOCKERHUB_TAG_TWO | Use tag `$DOCKERHUB_TAG_TWO` if accessing $CREATOR_REPONAME through a reverse proxy line NGINX
+
 
 ```docker-compose.yml
 version: '3.6'
 services:
   $DOCKERHUB_REPONAME:
     container_name: $DOCKERHUB_REPONAME
-    image: griefed/$DOCKERHUB_REPONAME
+    image: $DOCKERHUB_USERNAME/$DOCKERHUB_REPONAME
     restart: unless-stopped
     volumes:
       - ./path/to/config:/config
     environment:
+      - TOKEN=<YOUR_BOT_TOKEN_HERE>
       - TZ=Europe/Berlin
       - PUID=1000  # User ID
       - PGID=1000  # Group ID
     ports:
-      - 80:$CONTAINER_PORT
+      - 3000:$CONTAINER_PORT
       - $CONTAINER_PORT2
 ```
 
 ## Raspberry Pi
 
-To run this container on a Raspberry Pi, use the `arm`-tag. I've tested it on a Raspberry Pi 3B.
+To run this container on a Raspberry Pi, use the `arm`-prefix for the `$DOCKERHUB_TAG_ONE`- and `$DOCKERHUB_TAG_TWO`-tags. I've tested the `$DOCKERHUB_TAG_ONE`-tag on a Raspberry Pi 3B.
 
-`griefed/$DOCKERHUB_REPONAME:arm`
+`$DOCKERHUB_USERNAME/$DOCKERHUB_REPONAME:$DOCKERHUB_TAG_ONE-arm`
+`$DOCKERHUB_USERNAME/$DOCKERHUB_REPONAME:$DOCKERHUB_TAG_TWO-arm`
 
 ## Configuration
 
@@ -60,7 +66,7 @@ data volume | Contains your/the containers important data.
 TZ | Timezone
 PUID | for UserID
 PGID | for GroupID
-ports | The port where the service will be available at.
+ports | The port where $DOCKERHUB_REPONAME will be available at. Only relevant when using `$DOCKERHUB_USERNAME/$DOCKERHUB_REPONAME:$DOCKERHUB_TAG_ONE`
 
 ## User / Group Identifiers
 
@@ -73,6 +79,88 @@ In this instance `PUID=1000` and `PGID=1000`, to find yours use `id user` as bel
 ```
   $ id username
     uid=1000(dockeruser) gid=1000(dockergroup) groups=1000(dockergroup)
+```
+
+## Specify channels to ignore:
+D-Zone will, by default, listen to all channels on the servers which your bot is connected to.
+If you want to set ignoreChannels, you need to edit your `discord-config.json`file in the folder you specified in your `volumes:`.
+Edit the "servers" block on a per server basis, e.g.:
+```json
+  "servers": [
+    {
+      "id": "<YOUR_SERVER_ID_HERE",
+      "default": true,
+      "ignoreChannels": ["TEXTCHANNEL_ID1","TEXTCHANNEL_ID2","TEXTCHANNEL_ID3"]
+    }
+  ]
+```
+If you want to define multiple servers, see https://github.com/d-zone-org/d-zone/blob/master/discord-config-example.json
+
+## Running D-Zone behind a reverse proxy like NGINX
+
+If you want to serve d-zone with a reverse proxy like nginx and HTTPS, then this may be of help to you:
+
+```docker-compose.yml
+version: '3.6'
+services:
+  d-zone:
+    container_name: $DOCKERHUB_REPONAME
+    image: griefed/$DOCKERHUB_REPONAME:$DOCKERHUB_TAG_TWO
+    restart: unless-stopped
+    volumes:
+      - ./path/to/config/files:/config
+    environment:
+      - TOKEN=<YOUR_BOT_TOKEN_HERE>
+      - TZ=Europe/Berlin
+      - PUID=1000  #User ID
+      - PGID=1000  #Group ID
+```
+
+I use a dockerized NGINX as a reverse proxy, specifically [linuxserver/swag](https://hub.docker.com/r/linuxserver/swag).
+
+```nginx
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    server_name SUBDMOAIN.*;
+
+    include /config/nginx/ssl.conf;
+
+    client_max_body_size 0;
+
+    # enable for ldap auth, fill in ldap details in ldap.conf
+    #include /config/nginx/ldap.conf;
+
+    # enable for Authelia
+    #include /config/nginx/authelia-server.conf;
+
+    location / {
+        # enable the next two lines for http auth
+        #auth_basic "Restricted";
+        #auth_basic_user_file /config/nginx/.htpasswd;
+
+        # enable the next two lines for ldap auth
+        #auth_request /auth;
+        #error_page 401 =200 /ldaplogin;
+
+        # enable for Authelia
+        #include /config/nginx/authelia-location.conf;
+
+        include /config/nginx/proxy.conf;
+        resolver 127.0.0.11 valid=30s;
+
+        proxy_set_header HOST $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_pass_request_headers on;
+        set $upstream_app d-zone;
+        set $upstream_port 3000;
+        set $upstream_proto http;
+        proxy_pass $upstream_proto://$upstream_app:$upstream_port;
+    }
+}
 ```
 
 ### Building the image yourself
@@ -100,6 +188,7 @@ services:
 ```
 
 1. Clone the repository: `git clone https://github.com/Griefed/$GITHUB_REPONAME.git ./$GITHUB_REPONAME`
+1. Rename **Dockerfile.$DOCKERHUB_TAG_ONE** to **Dockerfile**: `mv Dockerfile.$DOCKERHUB_TAG_ONE Dockerfile`
 1. Prepare docker-compose.yml file as seen above
 1. `docker-compose up -d --build $DOCKERHUB_REPONAME`
 1. Visit IP.ADDRESS.OF.HOST:8080
