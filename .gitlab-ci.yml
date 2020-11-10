@@ -1,16 +1,20 @@
-variables:
-  DOCKER_TLS_CERTDIR: ""
+# https://github.com/jonashackt/gitlab-ci-stack#configure-gitlab-runner-with-shell-executor
+# https://github.com/jonashackt/gitlab-ci-shell-example
 
 stages:
   - readme
-  - build
+  - test
   - publish
+  - cleanup
 
-image: docker:19.03.8
+before_script:
+  - docker info
+  - ls -ahl && ls -ahl *
 
 readme:
   stage: readme
-  image: alpine:3.12
+  tags:
+    - shell
   script:
     - apk add gettext
     - source .gitlab/.readme_variables
@@ -33,23 +37,51 @@ readme:
     - echo ""
     - echo ""
     - envsubst < .gitlab/readme_template | less
+    - envsubst < .gitlab/readme_template > /home/gitlab-runner/READMEs/$CI_PROJECT_NAME/README.md
     - echo ""
-    - echo ""
-build:
-  stage: build
+
+test_port:
+  stage: test
+  tags:
+    - shell
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker pull $CI_REGISTRY_IMAGE:port || true
-    - docker build --cache-from $CI_REGISTRY_IMAGE:port --tag $CI_REGISTRY_IMAGE:port -f Dockerfile.port .
-    - docker push $CI_REGISTRY_IMAGE:port
-    - docker build --cache-from $CI_REGISTRY_IMAGE:proxy --tag $CI_REGISTRY_IMAGE:proxy -f Dockerfile.proxy .
-    - docker push $CI_REGISTRY_IMAGE:proxy
+    - docker build  --tag $CI_REGISTRY_IMAGE:arm-port -f Dockerfile.port .
+    - docker push $CI_REGISTRY_IMAGE:arm-port
 
-publish:
+test_proxy:
+  stage: test
+  tags:
+    - shell
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build  --tag $CI_REGISTRY_IMAGE:arm-proxy -f Dockerfile.proxy .
+    - docker push $CI_REGISTRY_IMAGE:arm-proxy
+
+publish_port:
   stage: publish
+  tags:
+    - shell
   script:
     - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $DOCKER_REGISTRY
-    - docker build --tag $DOCKER_USER/$DOCKER_REPO:arm.port -f Dockerfile.port .
-    - docker push $DOCKER_USER/$DOCKER_REPO:arm.port
-    - docker build --tag $DOCKER_USER/$DOCKER_REPO:arm.proxy -f Dockerfile.proxy .
-    - docker push $DOCKER_USER/$DOCKER_REPO:arm.proxy
+    - docker build --tag $DOCKER_USER/$DOCKER_REPO:arm-port -f Dockerfile.port .
+    - docker push $DOCKER_USER/$DOCKER_REPO:arm-port
+    - docker system prune --all --force
+
+publish_port:
+  stage: publish
+  tags:
+    - shell
+  script:
+    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $DOCKER_REGISTRY
+    - docker build --tag $DOCKER_USER/$DOCKER_REPO:arm-proxy -f Dockerfile.proxy .
+    - docker push $DOCKER_USER/$DOCKER_REPO:arm-proxy
+    - docker system prune --all --force
+
+cleanup:
+  stage: cleanup
+  tags:
+    - shell
+  script:
+    - rm -rf * .dockerignore .github .gitignore .gitlab
+    - ls -ahl
