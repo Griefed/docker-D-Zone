@@ -58,25 +58,25 @@ test_proxy:
     - docker build --network host --tag $CI_REGISTRY_IMAGE:arm-proxy -f Dockerfile.proxy .
     - docker push $CI_REGISTRY_IMAGE:arm-proxy
 
-publish_port:
-  stage: publish
-  tags:
-    - shell
-  script:
-    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $DOCKER_REGISTRY
-    - docker build --network host --tag $DOCKER_USER/$DOCKER_REPO:arm-port -f Dockerfile.port .
-    - docker push $DOCKER_USER/$DOCKER_REPO:arm-port
-    - docker system prune --all --force
+#publish_port:
+#  stage: publish
+#  tags:
+#    - shell
+#  script:
+#    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $DOCKER_REGISTRY
+#    - docker build --network host --tag $DOCKER_USER/$DOCKER_REPO:arm-port -f Dockerfile.port .
+#    - docker push $DOCKER_USER/$DOCKER_REPO:arm-port
+#    - docker system prune --all --force
 
-publish_proxy:
-  stage: publish
-  tags:
-    - shell
-  script:
-    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $DOCKER_REGISTRY
-    - docker build --network host --tag $DOCKER_USER/$DOCKER_REPO:arm-proxy -f Dockerfile.proxy .
-    - docker push $DOCKER_USER/$DOCKER_REPO:arm-proxy
-    - docker system prune --all --force
+#publish_proxy:
+#  stage: publish
+#  tags:
+#    - shell
+#  script:
+#    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $DOCKER_REGISTRY
+#    - docker build --network host --tag $DOCKER_USER/$DOCKER_REPO:arm-proxy -f Dockerfile.proxy .
+#    - docker push $DOCKER_USER/$DOCKER_REPO:arm-proxy
+#    - docker system prune --all --force
 
 cleanup:
   stage: cleanup
