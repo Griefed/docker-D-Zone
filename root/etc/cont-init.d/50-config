@@ -7,11 +7,11 @@ if [ ! -f "/config/discord-config.json" ]; then
 fi
 
 if [ ! -f "/config/misc-config.json" ]; then
-        cp /defaults/misc-config.json /config/misc-config.json
+  cp /defaults/misc-config.json /config/misc-config.json
 fi
 
 if [ ! -f "/config/socket-config.json" ]; then
-        cp /defaults/socket-config.json /config/socket-config.json
+  cp /defaults/socket-config.json /config/socket-config.json
 fi
 
 # Overwrite config files in d-zone directory
