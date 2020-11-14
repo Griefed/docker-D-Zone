@@ -1,4 +1,6 @@
-[![D-Zone](img/docker-D-Zone_header.png)](https://github.com/d-zone-org/d-zone)
+[![docker-D-Zone](img/docker-D-Zone_header.png)](https://github.com/d-zone-org/d-zone)
+
+---
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/griefed/d-zone?style=flat-square)](https://hub.docker.com/repository/docker/griefed/d-zone)
 [![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/griefed/d-zone?label=Image%20size&sort=date&style=flat-square)](https://hub.docker.com/repository/docker/griefed/d-zone)
@@ -7,57 +9,65 @@
 [![GitHub Repo stars](https://img.shields.io/github/stars/Griefed/docker-D-Zone?label=GitHub%20Stars&style=social)](https://github.com/Griefed/docker-D-Zone)
 [![GitHub forks](https://img.shields.io/github/forks/Griefed/docker-D-Zone?label=GitHub%20Forks&style=social)](https://github.com/Griefed/docker-D-Zone)
 
-D-Zone is a graphical simulation meant to abstractly represent the activity in your Discord server.
+docker-D-Zone
 
-This is not meant for any actual monitoring or diagnostics, only an experiment in the abstraction of chatroom data represented via autonomous characters in a scene.
+D-Zone is a graphical simulation meant to abstractly represent the activity in your Discord server. This is not meant for any actual monitoring or diagnostics, only an experiment in the abstraction of chatroom data represented via autonomous characters in a scene.
 
 [![d-zone](img/docker-D-Zone_screenshot.png)](https://github.com/d-zone-org/d-zone)
 
 ---
 
-Creates a Container which runs [D-Zone-Org's](https://github.com/d-zone-org) [D-Zone](https://github.com/d-zone-org/d-zone), with [lsiobase/alpine](https://hub.docker.com/r/lsiobase/alpine) as the base image, as seen on https://pixelatomy.com/dzone/?s=default. 
+Creates a Container which runs [d-zone-org's](https://github.com/d-zone-org) [d-zone](https://github.com/d-zone-org/d-zone), with [lsiobase/alpine](https://hub.docker.com/r/lsiobase/alpine) as the base image, as seen on https://pixelatomy.com/dzone/?s=default.
 
-The lasiobase/alpine image is a custom base image built with [Alpine linux](https://alpinelinux.org/) and [S6 overlay](https://github.com/just-containers/s6-overlay).
+The lsiobase/alpine image is a custom base image built with [Alpine linux](https://alpinelinux.org/) and [S6 overlay](https://github.com/just-containers/s6-overlay).
 Using this image allows us to use the same user/group ids in the container as on the host, making file transfers much easier
 
 ## Deployment
 
-### Pre-built images
-
-- Using the [`:proxy`](https://github.com/Griefed/docker-D-Zone/blob/lsiobase/alpine/Dockerfile.proxy) tag:  Use this image if you are using a reverse proxy. Connecting via IP:PORT will not work with this image.
-
-- Using the [`:port`](https://github.com/Griefed/docker-D-Zone/blob/lsiobase/alpine/Dockerfile.port) tag:  Use this image if you want to access d-zone via IP:PORT. Connecting with a reverse proxy will not work with this image.
-
-- Pulling `:latest` will automatically retrieve the [`proxy`](https://github.com/Griefed/docker-D-Zone/blob/lsiobase/alpine/Dockerfile.proxy) image.
+Tags | Description
+-----|-------------
+port | Use tag `port` if accessing d-zone via IP:PORT
+proxy | Use tag `proxy` if accessing d-zone through a reverse proxy line NGINX
+port-arm | Use tag `port-arm` if accessing d-zone via IP:PORT
+proxy-arm | Use tag `proxy-arm` if accessing d-zone through a reverse proxy line NGINX
 
 ```docker-compose.yml
 version: '3.6'
 services:
   d-zone:
     container_name: d-zone
-    image: griefed/d-zone:<tag> # Either proxy or port
+    image: griefed/d-zone
     restart: unless-stopped
     volumes:
-      - ./path/to/config/files:/config
+      - ./path/to/config:/config
     environment:
       - TOKEN=<YOUR_BOT_TOKEN_HERE>
       - TZ=Europe/Berlin
       - PUID=1000  # User ID
       - PGID=1000  # Group ID
-    ports:         # Only specify a port mapping when
-      - 3000:3000  # using the port tag
+    ports:
+      - 3000:3000
+      - 
 ```
+
+## Raspberry Pi
+
+To run this container on a Raspberry Pi, use the `arm`-prefix for the `port`- and `proxy`-tags. I've tested the `port`-tag on a Raspberry Pi 3B.
+
+`griefed/d-zone:port-arm`
+`griefed/d-zone:proxy-arm`
 
 ## Configuration
 
 Configuration | Explanation
 ------------ | -------------
-restart | [Restart policy](https://docs.docker.com/compose/compose-file/#restart) Either: "no", always, on-failure, unless-stopped
-volumes | /config contains all relevant configuration files.
+[Restart policy](https://docs.docker.com/compose/compose-file/#restart) | "no", always, on-failure, unless-stopped
+config volume | Contains config files and logs.
+data volume | Contains your/the containers important data.
 TZ | Timezone
 PUID | for UserID
 PGID | for GroupID
-ports | The port where D-Zone will be available at. Only relevant when using `griefed/d-zone:port`
+ports | The port where d-zone will be available at. Only relevant when using `griefed/d-zone:port`
 
 ## User / Group Identifiers
 
@@ -73,7 +83,7 @@ In this instance `PUID=1000` and `PGID=1000`, to find yours use `id user` as bel
 ```
 
 ## Specify channels to ignore:
-D-Zone will, by default, listen to all channels on the servers which your bot is connected to. 
+D-Zone will, by default, listen to all channels on the servers which your bot is connected to.
 If you want to set ignoreChannels, you need to edit your `discord-config.json`file in the folder you specified in your `volumes:`.
 Edit the "servers" block on a per server basis, e.g.:
 ```json
@@ -141,23 +151,22 @@ server {
         include /config/nginx/proxy.conf;
         resolver 127.0.0.11 valid=30s;
 
-        proxy_set_header HOST $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header HOST ;
+        proxy_set_header X-Real-IP ;
+        proxy_set_header X-Forwarded-For ;
+        proxy_set_header X-Forwarded-Proto ;
         proxy_pass_request_headers on;
-        set $upstream_app d-zone;
-        set $upstream_port 3000;
-        set $upstream_proto http;
-        proxy_pass $upstream_proto://$upstream_app:$upstream_port;
+        set  d-zone;
+        set  3000;
+        set  http;
+        proxy_pass ://:;
     }
 }
 ```
 
-### Raspberry Pi & building the image yourself
+### Building the image yourself
 
-Using the [Dockerfile.port](https://github.com/Griefed/docker-D-Zone/blob/lsiobase/alpine/Dockerfile.port), this container can be built and run on a Raspberry Pi. 
-I've tested it on a Raspberry Pi 3B & 3B+.
+Use the [Dockerfile](https://github.com/Griefed/docker-D-Zone/Dockerfile) to build the image yourself, in case you want to make any changes to it
 
 #### docker-compose.yml
 
@@ -166,23 +175,23 @@ version: '3.6'
 services:
   d-zone:
     container_name: d-zone
-    build: ./d-zone/
+    build: ./docker-D-Zone/
     restart: unless-stopped
     volumes:
       - ./path/to/config/files:/config
     environment:
-      - TOKEN=<YOUR_BOT_TOKEN_HERE>
       - TZ=Europe/Berlin
-      - PUID=1000  #User ID
-      - PGID=1000  #Group ID
+      - PUID=1000  # User ID
+      - PGID=1000  # Group ID
     ports:
-      - 3000:3000
+      - 8080:3000
+      - 
 ```
 
-1. Clone the repository: `git clone https://github.com/Griefed/docker-D-Zone.git ./d-zone`
+1. Clone the repository: `git clone https://github.com/Griefed/docker-D-Zone.git ./docker-D-Zone`
 1. Rename **Dockerfile.port** to **Dockerfile**: `mv Dockerfile.port Dockerfile`
 1. Prepare docker-compose.yml file as seen above
 1. `docker-compose up -d --build d-zone`
-1. Visit IP.ADDRESS.OF.HOST:3000
+1. Visit IP.ADDRESS.OF.HOST:8080
 1. ???
 1. Profit!
