@@ -1,4 +1,4 @@
-[![$GITHUB_REPONAME](img/$GITHUB_REPONAME_header.png)](https://github.com/$CREATOR_USERNAME/$CREATOR_REPONAME)
+[![$GITHUB_REPONAME](img/$GITHUB_REPONAME_HEADER)](https://github.com/$CREATOR_USERNAME/$CREATOR_REPONAME)
 
 ---
 
@@ -13,7 +13,7 @@ $GITHUB_REPONAME
 
 $DESCRIPTION
 
-[![$CREATOR_REPONAME](img/$GITHUB_REPONAME_screenshot.png)](https://github.com/$CREATOR_USERNAME/$CREATOR_REPONAME)
+[![$CREATOR_REPONAME](img/$GITHUB_REPONAME_SCREENSHOT)](https://github.com/$CREATOR_USERNAME/$CREATOR_REPONAME)
 
 ---
 
@@ -28,7 +28,8 @@ Tags | Description
 -----|-------------
 $DOCKERHUB_TAG_ONE | Use tag `$DOCKERHUB_TAG_ONE` if accessing $CREATOR_REPONAME via IP:PORT
 $DOCKERHUB_TAG_TWO | Use tag `$DOCKERHUB_TAG_TWO` if accessing $CREATOR_REPONAME through a reverse proxy line NGINX
-
+$DOCKERHUB_TAG_ONE-arm | Use tag `$DOCKERHUB_TAG_ONE-arm` if accessing $CREATOR_REPONAME via IP:PORT
+$DOCKERHUB_TAG_TWO-arm | Use tag `$DOCKERHUB_TAG_TWO-arm` if accessing $CREATOR_REPONAME through a reverse proxy line NGINX
 
 ```docker-compose.yml
 version: '3.6'
