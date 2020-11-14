@@ -5,7 +5,6 @@ stages:
   - readme
   - test
   - publish
-  - cleanup
 
 before_script:
   - docker info
@@ -77,11 +76,3 @@ test_proxy:
 #    - docker build --network host --tag $DOCKER_USER/$DOCKER_REPO:arm-proxy -f Dockerfile.proxy .
 #    - docker push $DOCKER_USER/$DOCKER_REPO:arm-proxy
 #    - docker system prune --all --force
-
-cleanup:
-  stage: cleanup
-  tags:
-    - shell
-  script:
-    - rm -rf * .dockerignore .github .gitignore .gitlab
-    - ls -ahl
