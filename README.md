@@ -1,4 +1,4 @@
-[![docker-D-Zone](img/docker-D-Zone_header.png)](https://github.com/Griefed/docker-D-Zone)
+[![docker-D-Zone](https://i.griefed.de/images/2020/11/18/docker-D-Zone_header.png)](https://github.com/Griefed/docker-D-Zone)
 
 ---
 
@@ -13,7 +13,7 @@ docker-D-Zone
 
 D-Zone is a graphical simulation meant to abstractly represent the activity in your Discord server. This is not meant for any actual monitoring or diagnostics, only an experiment in the abstraction of chatroom data represented via autonomous characters in a scene.
 
-[![d-zone](img/docker-D-Zone_screenshot.png)](https://github.com/d-zone-org/d-zone)
+[![d-zone](https://i.griefed.de/images/2020/11/18/docker-D-Zone_screenshot.png)](https://github.com/d-zone-org/d-zone)
 
 ---
 
