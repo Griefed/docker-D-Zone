@@ -1,4 +1,4 @@
-[![docker-D-Zone](img/docker-D-Zone_header.png)](https://github.com/d-zone-org/d-zone)
+[![docker-D-Zone](img/docker-D-Zone_header.png)](https://github.com/Griefed/docker-D-Zone)
 
 ---
 
@@ -19,7 +19,7 @@ D-Zone is a graphical simulation meant to abstractly represent the activity in y
 
 Creates a Container which runs [d-zone-org's](https://github.com/d-zone-org) [d-zone](https://github.com/d-zone-org/d-zone), with [lsiobase/alpine](https://hub.docker.com/r/lsiobase/alpine) as the base image, as seen on https://pixelatomy.com/dzone/?s=default.
 
-The lsiobase/alpine image is a custom base image built with [Alpine linux](https://alpinelinux.org/) and [S6 overlay](https://github.com/just-containers/s6-overlay).
+The [lsiobase/alpine](https://hub.docker.com/r/lsiobase/alpine) image is a custom base image built with [Alpine linux](https://alpinelinux.org/) and [S6 overlay](https://github.com/just-containers/s6-overlay).
 Using this image allows us to use the same user/group ids in the container as on the host, making file transfers much easier
 
 ## Deployment
