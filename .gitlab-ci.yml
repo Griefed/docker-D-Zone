@@ -65,7 +65,6 @@ publish_port:
     - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $DOCKER_REGISTRY
     - docker build --network host --tag $DOCKER_USER/$DOCKER_REPO:arm-port -f Dockerfile.port .
     - docker push $DOCKER_USER/$DOCKER_REPO:arm-port
-    - docker system prune --all --force
 
 publish_proxy:
   stage: publish
@@ -75,4 +74,3 @@ publish_proxy:
     - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $DOCKER_REGISTRY
     - docker build --network host --tag $DOCKER_USER/$DOCKER_REPO:arm-proxy -f Dockerfile.proxy .
     - docker push $DOCKER_USER/$DOCKER_REPO:arm-proxy
-    - docker system prune --all --force
