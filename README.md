@@ -9,7 +9,7 @@
 [![GitHub Repo stars](https://img.shields.io/github/stars/Griefed/docker-D-Zone?label=GitHub%20Stars&style=social)](https://github.com/Griefed/docker-D-Zone)
 [![GitHub forks](https://img.shields.io/github/forks/Griefed/docker-D-Zone?label=GitHub%20Forks&style=social)](https://github.com/Griefed/docker-D-Zone)
 
-docker-D-Zone
+# docker-D-Zone
 
 D-Zone is a graphical simulation meant to abstractly represent the activity in your Discord server. This is not meant for any actual monitoring or diagnostics, only an experiment in the abstraction of chatroom data represented via autonomous characters in a scene.
 
@@ -22,7 +22,7 @@ Creates a Container which runs [d-zone-org's](https://github.com/d-zone-org) [d-
 The [lsiobase/alpine](https://hub.docker.com/r/lsiobase/alpine) image is a custom base image built with [Alpine linux](https://alpinelinux.org/) and [S6 overlay](https://github.com/just-containers/s6-overlay).
 Using this image allows us to use the same user/group ids in the container as on the host, making file transfers much easier
 
-## Deployment
+# Deployment
 
 Tags | Description
 -----|-------------
@@ -30,6 +30,8 @@ port | Use tag `port` if accessing d-zone via IP:PORT
 proxy | Use tag `proxy` if accessing d-zone through a reverse proxy line NGINX
 port-arm | Use tag `port-arm` if accessing d-zone via IP:PORT
 proxy-arm | Use tag `proxy-arm` if accessing d-zone through a reverse proxy line NGINX
+
+## Pre-built images
 
 ```docker-compose.yml
 version: '3.6'
@@ -47,7 +49,6 @@ services:
       - PGID=1000  # Group ID
     ports:
       - 3000:3000
-      - 
 ```
 
 ## Raspberry Pi
@@ -57,7 +58,7 @@ To run this container on a Raspberry Pi, use the `arm`-prefix for the `port`- an
 `griefed/d-zone:port-arm`
 `griefed/d-zone:proxy-arm`
 
-## Configuration
+# Configuration
 
 Configuration | Explanation
 ------------ | -------------
@@ -69,23 +70,11 @@ PUID | for UserID
 PGID | for GroupID
 ports | The port where d-zone will be available at. Only relevant when using `griefed/d-zone:port`
 
-## User / Group Identifiers
-
-When using volumes, permissions issues can arise between the host OS and the container. [Linuxserver.io](https://www.linuxserver.io/) avoids this issue by allowing you to specify the user `PUID` and group `PGID`.
-
-Ensure any volume directories on the host are owned by the same user you specify and any permissions issues will vanish like magic.
-
-In this instance `PUID=1000` and `PGID=1000`, to find yours use `id user` as below:
-
-```
-  $ id username
-    uid=1000(dockeruser) gid=1000(dockergroup) groups=1000(dockergroup)
-```
-
 ## Specify channels to ignore:
 D-Zone will, by default, listen to all channels on the servers which your bot is connected to.
 If you want to set ignoreChannels, you need to edit your `discord-config.json`file in the folder you specified in your `volumes:`.
 Edit the "servers" block on a per server basis, e.g.:
+
 ```json
   "servers": [
     {
@@ -95,6 +84,7 @@ Edit the "servers" block on a per server basis, e.g.:
     }
   ]
 ```
+
 If you want to define multiple servers, see https://github.com/d-zone-org/d-zone/blob/master/discord-config-example.json
 
 ## Running D-Zone behind a reverse proxy like NGINX
@@ -164,11 +154,24 @@ server {
 }
 ```
 
-### Building the image yourself
+## User / Group Identifiers
+
+When using volumes, permissions issues can arise between the host OS and the container. [Linuxserver.io](https://www.linuxserver.io/) avoids this issue by allowing you to specify the user `PUID` and group `PGID`.
+
+Ensure any volume directories on the host are owned by the same user you specify and any permissions issues will vanish like magic.
+
+In this instance `PUID=1000` and `PGID=1000`, to find yours use `id user` as below:
+
+```
+  $ id username
+    uid=1000(dockeruser) gid=1000(dockergroup) groups=1000(dockergroup)
+```
+
+# Building the image yourself
 
 Use the [Dockerfile](https://github.com/Griefed/docker-D-Zone/Dockerfile) to build the image yourself, in case you want to make any changes to it
 
-#### docker-compose.yml
+docker-compose.yml:
 
 ```docker-compose.yml
 version: '3.6'
@@ -180,12 +183,12 @@ services:
     volumes:
       - ./path/to/config/files:/config
     environment:
+      - TOKEN=<YOUR_BOT_TOKEN_HERE>
       - TZ=Europe/Berlin
       - PUID=1000  # User ID
       - PGID=1000  # Group ID
     ports:
-      - 8080:3000
-      - 
+      - 3000:3000
 ```
 
 1. Clone the repository: `git clone https://github.com/Griefed/docker-D-Zone.git ./docker-D-Zone`
