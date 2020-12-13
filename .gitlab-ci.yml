@@ -39,15 +39,6 @@ readme:
     - envsubst < .gitlab/readme_template > /home/gitlab-runner/READMEs/$CI_PROJECT_NAME/README.md
     - echo ""
 
-test_port:
-  stage: test
-  tags:
-    - shell
-  script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build --network host --tag $CI_REGISTRY_IMAGE:arm-port -f Dockerfile.port .
-    - docker push $CI_REGISTRY_IMAGE:arm-port
-
 test_proxy:
   stage: test
   tags:
@@ -56,15 +47,6 @@ test_proxy:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build --network host --tag $CI_REGISTRY_IMAGE:arm-proxy -f Dockerfile.proxy .
     - docker push $CI_REGISTRY_IMAGE:arm-proxy
-
-publish_port:
-  stage: publish
-  tags:
-    - shell
-  script:
-    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $DOCKER_REGISTRY
-    - docker build --network host --tag $DOCKER_USER/$DOCKER_REPO:arm-port -f Dockerfile.port .
-    - docker push $DOCKER_USER/$DOCKER_REPO:arm-port
 
 publish_proxy:
   stage: publish
