@@ -32,10 +32,13 @@ Using this image allows us to use the same user/group ids in the container as on
 
 Tags | Description
 -----|-------------
-port | Use tag `port` if accessing d-zone via IP:PORT
-proxy | Use tag `proxy` if accessing d-zone through a reverse proxy line NGINX
-port-arm | Use tag `port-arm` if accessing d-zone via IP:PORT
-proxy-arm | Use tag `proxy-arm` if accessing d-zone through a reverse proxy line NGINX
+`port` | Use tag `port` if accessing d-zone via IP:PORT. For linux/amd64,linux/arm/v7,linux/arm64.
+`proxy` | Use tag `proxy` if accessing d-zone through a reverse proxy line NGINX. For linux/amd64,linux/arm/v7,linux/arm64.
+`port-develop` | The latest image of, if existent, the in-dev version of this container. Use at your own risk!
+`proxy-develop` | The latest image of, if existent, the in-dev version of this container. Use at your own risk!
+
+Using GitHub Workflows, images for this container are multi-arch. Simply pulling any of the tags above should retrieve the correct image for your architecture.
+Images are available for linux/amd64,linux/arm/v7,linux/arm64.
 
 ## Pre-built images
 
@@ -45,7 +48,7 @@ Using docker-compose:
 version: "2"
 services:
   d-zone:
-    image: griefed/d-zone:latest
+    image: griefed/d-zone:proxy
     container_name: d-zone
     restart: unless-stopped
     environment:
@@ -71,14 +74,8 @@ docker create \
   -v /host/path/to/config:/config \
   -p 3000:3000 \
   --restart unless-stopped \
-  griefed/d-zone:latest
+  griefed/d-zone:proxy
 ```
-## Raspberry Pi
-
-To run this container on a Raspberry Pi, use the `arm`-prefix for the `port`- and `proxy`-tags. I've tested the `port`-tag on a Raspberry Pi 3B.
-
-`griefed/d-zone:port-arm`
-`griefed/d-zone:proxy-arm`
 
 # Configuration
 
