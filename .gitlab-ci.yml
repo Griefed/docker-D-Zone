@@ -1,0 +1,89 @@
+stages:
+  - test
+  - release
+  - build
+
+test docker:
+  stage: test
+  image: griefed/docker-with-buildx:latest
+  services:
+    - name: docker:dind
+      alias: docker
+  variables:
+    project_name: $CI_PROJECT_NAME
+    SEMANTIC_RELEASE_PACKAGE: $CI_PROJECT_NAME
+  before_script:
+    - docker login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_TOKEN" docker.io
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    - docker buildx create --use --name grfdbuilder
+  script:
+    - docker buildx build
+      --push
+      --platform linux/amd64,linux/arm/v7,linux/arm64
+      --tag "$CI_REGISTRY_IMAGE:port-develop"
+      --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:port-develop"
+      --file Dockerfile.port .
+    - docker buildx build
+      --push
+      --platform linux/amd64,linux/arm/v7,linux/arm64
+      --tag "$CI_REGISTRY_IMAGE:proxy-develop"
+      --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:proxy-develop"
+      --file Dockerfile.proxy .
+  except:
+    refs:
+      - tags
+    variables:
+      - $CI_COMMIT_TITLE =~ /^RELEASE:.+$/
+
+release:
+  needs: ['test docker']
+  stage: release
+  image: griefed/gitlab-semantic-release:latest
+  services:
+    - name: docker:dind
+      alias: docker
+  variables:
+    project_name: $CI_PROJECT_NAME
+    SEMANTIC_RELEASE_PACKAGE: $CI_PROJECT_NAME
+  script:
+    - npx semantic-release
+  only:
+    - master
+  except:
+    refs:
+      - tags
+    variables:
+      - $CI_COMMIT_TITLE =~ /^RELEASE:.+$/
+
+build:
+  stage: build
+  image: griefed/docker-with-buildx:latest
+  services:
+    - name: docker:dind
+      alias: docker
+  variables:
+    project_name: $CI_PROJECT_NAME
+    SEMANTIC_RELEASE_PACKAGE: $CI_PROJECT_NAME
+  before_script:
+    - docker login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_TOKEN" docker.io
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    - docker buildx create --use --name grfdbuilder
+  script:
+    - docker buildx build
+      --push
+      --platform linux/amd64,linux/arm/v7,linux/arm64
+      --tag "$CI_REGISTRY_IMAGE:port"
+      --tag "$CI_REGISTRY_IMAGE:latest"
+      --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:port"
+      --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:latest"
+      --file Dockerfile.port .
+    - docker buildx build
+      --push
+      --platform linux/amd64,linux/arm/v7,linux/arm64
+      --tag "$CI_REGISTRY_IMAGE:proxy"
+      --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:proxy"
+      --file Dockerfile.proxy .
+  only:
+    - tags
