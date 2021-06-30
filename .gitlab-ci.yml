@@ -15,6 +15,7 @@ test docker:
   before_script:
     - docker login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_TOKEN" docker.io
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker login -u "$DOCKERHUB_USER" -p "$GITHUB_TOKEN" ghcr.io
     - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
     - docker buildx create --use --name grfdbuilder
   script:
@@ -23,12 +24,14 @@ test docker:
       --platform linux/amd64,linux/arm/v7,linux/arm64
       --tag "$CI_REGISTRY_IMAGE:port-develop"
       --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:port-develop"
+      --tag "ghcr.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:port-develop"
       --file Dockerfile.port .
     - docker buildx build
       --push
       --platform linux/amd64,linux/arm/v7,linux/arm64
       --tag "$CI_REGISTRY_IMAGE:proxy-develop"
       --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:proxy-develop"
+      --tag "ghcr.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:proxy-develop"
       --file Dockerfile.proxy .
   except:
     refs:
@@ -68,6 +71,7 @@ build:
   before_script:
     - docker login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_TOKEN" docker.io
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker login -u "$DOCKERHUB_USER" -p "$GITHUB_TOKEN" ghcr.io
     - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
     - docker buildx create --use --name grfdbuilder
   script:
@@ -75,15 +79,18 @@ build:
       --push
       --platform linux/amd64,linux/arm/v7,linux/arm64
       --tag "$CI_REGISTRY_IMAGE:port"
-      --tag "$CI_REGISTRY_IMAGE:latest"
       --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:port"
-      --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:latest"
+      --tag "ghcr.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:port"
       --file Dockerfile.port .
     - docker buildx build
       --push
       --platform linux/amd64,linux/arm/v7,linux/arm64
       --tag "$CI_REGISTRY_IMAGE:proxy"
       --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:proxy"
+      --tag "ghcr.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:proxy"
+      --tag "$CI_REGISTRY_IMAGE:latest"
+      --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:latest"
+      --tag "ghcr.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:latest"
       --file Dockerfile.proxy .
   only:
     - tags
