@@ -21,15 +21,15 @@ test docker:
   script:
     - docker buildx build
       --push
+      --no-cache
       --platform linux/amd64,linux/arm/v7,linux/arm64
-      --tag "$CI_REGISTRY_IMAGE:port-develop"
       --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:port-develop"
       --tag "ghcr.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:port-develop"
       --file Dockerfile.port .
     - docker buildx build
       --push
+      --no-cache
       --platform linux/amd64,linux/arm/v7,linux/arm64
-      --tag "$CI_REGISTRY_IMAGE:proxy-develop"
       --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:proxy-develop"
       --tag "ghcr.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:proxy-develop"
       --file Dockerfile.proxy .
@@ -77,18 +77,17 @@ build:
   script:
     - docker buildx build
       --push
+      --no-cache
       --platform linux/amd64,linux/arm/v7,linux/arm64
-      --tag "$CI_REGISTRY_IMAGE:port"
       --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:port"
       --tag "ghcr.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:port"
       --file Dockerfile.port .
     - docker buildx build
       --push
+      --no-cache
       --platform linux/amd64,linux/arm/v7,linux/arm64
-      --tag "$CI_REGISTRY_IMAGE:proxy"
       --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:proxy"
       --tag "ghcr.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:proxy"
-      --tag "$CI_REGISTRY_IMAGE:latest"
       --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:latest"
       --tag "ghcr.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:latest"
       --file Dockerfile.proxy .
