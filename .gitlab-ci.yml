@@ -23,15 +23,15 @@ test docker:
       --push
       --no-cache
       --platform linux/amd64,linux/arm64
-      --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:port-develop"
-      --tag "ghcr.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:port-develop"
+      --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:port-develop-$CI_COMMIT_SHORT_SHA"
+      --tag "ghcr.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:port-develop-$CI_COMMIT_SHORT_SHA"
       --file Dockerfile.port .
     - docker buildx build
       --push
       --no-cache
       --platform linux/amd64,linux/arm64
-      --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:proxy-develop"
-      --tag "ghcr.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:proxy-develop"
+      --tag "index.docker.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:proxy-develop-$CI_COMMIT_SHORT_SHA"
+      --tag "ghcr.io/$DOCKERHUB_USER/$DOCKERHUB_REPO:proxy-develop-$CI_COMMIT_SHORT_SHA"
       --file Dockerfile.proxy .
   except:
     refs:
