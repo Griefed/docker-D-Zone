@@ -1,4 +1,4 @@
-FROM lsiobase/alpine:3.14
+FROM lsiobase/alpine:3.15
 
 LABEL maintainer="Griefed <griefed@griefed.de>"
 LABEL description="Dockerfile to build an image of D-Zone which is to be accessed with a reverse proxy like NGINX"
