@@ -11,6 +11,12 @@ workflow:
       when: never
     - when: always
 
+services:
+  - name: ghcr.io/griefed/gitlab-ci-cd:2.0.8
+    alias: docker
+
+image: ghcr.io/griefed/gitlab-ci-cd:2.0.8
+
 test docker:
   stage: test
   image: griefed/gitlab-ci-cd:2.0.8
