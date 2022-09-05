@@ -19,7 +19,7 @@ image: ghcr.io/griefed/gitlab-ci-cd:2.0.9
 
 test docker:
   stage: test
-  image: griefed/gitlab-ci-cd:2.0.9
+  image: griefed/gitlab-ci-cd:2.2.1
   services:
     - name: docker:dind
       alias: docker
@@ -56,7 +56,7 @@ test docker:
 release:
   needs: ['test docker']
   stage: release
-  image: griefed/gitlab-ci-cd:2.0.9
+  image: griefed/gitlab-ci-cd:2.2.1
   services:
     - name: docker:dind
       alias: docker
@@ -75,7 +75,7 @@ release:
 
 build:
   stage: build
-  image: griefed/gitlab-ci-cd:2.0.9
+  image: griefed/gitlab-ci-cd:2.2.1
   services:
     - name: docker:dind
       alias: docker
